@@ -13,7 +13,7 @@ w_W = dimensions.current_w
 w_H = dimensions.current_h
 H_09 = w_H * 0.9
 W_SIZE = (min(w_W * 0.9, 600), H_09 - (H_09 % 10))
-BREAKPOINT = int(W_SIZE[1] / 2)
+BREAKPOINT = int(W_SIZE[1] / 2) - int(W_SIZE[1] * 0.1)
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -57,6 +57,13 @@ def game():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse = pygame.mouse.get_pos()
+            for element in list_of_elements:
+                if (element['x'] - element['s'] * 2 <= mouse[0] <= element['x'] + element['s'] * 2 and
+                        element['y'] + element['s'] * 2 >= mouse[1] >= element['y'] - element['s'] * 2 >= BREAKPOINT):
+                    create_particles(mouse[0], mouse[1])
+                    list_of_elements.remove(element)
 
     for element in list_of_elements:
         element['y'] = element['y'] + element['g']
