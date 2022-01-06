@@ -25,6 +25,7 @@ COLORS = [RED, GREEN, WHITE, YELLOW]
 MAX_DISTANCE_TO_PARTICLES = 300
 SCORE = 0
 LOSES = 0
+VELOCITY = 0.001
 
 list_of_elements = []
 list_of_particles = []
@@ -60,23 +61,43 @@ def create_particles(_x: int, _y: int):
         list_of_particles.append([_x, _y, COLORS[randint(0, len(COLORS) - 1)], _g, _g2, str(uuid.uuid4()), _x, _y])
 
 
+def is_inside_ball(element, mouse) -> bool:
+    ray = element['s'] * 2
+
+    x_to_check = mouse[0]
+    y_to_check = mouse[1]
+    x_element_center = element['x']
+    y_element_center = element['y']
+
+    equation = (x_to_check - x_element_center) ** 2 + (y_to_check - y_element_center) ** 2
+
+    if equation <= ray ** 2:
+        return True
+
+    return False
+
+
+mouse_draw = None
+
+
 def game():
-    global LOSES, SCORE
+    global LOSES, SCORE, mouse_draw, VELOCITY
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse = pygame.mouse.get_pos()
             for element in list_of_elements:
-                if (element['x'] - element['s'] * 2 <= mouse[0] <= element['x'] + element['s'] * 2 and
-                        element['y'] + element['s'] * 2 >= mouse[1] >= element['y'] - element['s'] * 2 >= BREAKPOINT):
+                if is_inside_ball(element, mouse):
                     list_of_elements.remove(element)
                     create_particles(mouse[0], mouse[1])
                     SCORE += 1
+                    if SCORE % 10 == 0:
+                        VELOCITY += 0.001
 
     for element in list_of_elements:
-        element['y'] = element['y'] + element['g']
-        element['x'] = element['x'] + element['g2']
+        element['x'] = (element['x'] + VELOCITY) + element['g2']
+        element['y'] = (element['y'] + VELOCITY) + element['g']
 
         if element['x'] + element['s'] * 2 >= W_SIZE[0] or element['x'] - element['s'] * 2 <= 0:
             element['g2'] = -element['g2']
@@ -92,6 +113,15 @@ def game():
 
         if element['y'] >= W_SIZE[1] + element['s'] * 2:
             LOSES += 1
+            if LOSES % 10 == 0:
+                if VELOCITY > 0.001:
+                    VELOCITY -= 0.001
+                else:
+                    VELOCITY = 0.001
+                if SCORE > 10:
+                    SCORE -= 10
+                else:
+                    SCORE = 0
             list_of_elements.remove(element)
         elif b_1 - (b_1 % 10) == BREAKPOINT - (BREAKPOINT % 10) and element['c']:
             element['c'] = False
