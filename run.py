@@ -60,6 +60,7 @@ class Game:
                                 self.ten_more_point.play(0, 1500)
                             else:
                                 self.get_ball_sound.play(0, 2000)
+
                             self.balls.remove_ball(ball.id)
                             self.particles.create(ball.x, ball.y)
                             self.score.increment()
@@ -77,10 +78,9 @@ class Game:
                     ball.handle_with_color_update(Constants.Colors.GREEN)
                     ball.render()
 
-            gfxdraw.hline(self.screen, 0, int(Constants.GAME_WIDTH), int(Constants.BREAKPOINT), Constants.Colors.WHITE)
+            gfxdraw.hline(self.screen, 0, int(Constants.GAME_WIDTH), int(Constants.BREAKPOINT), Constants.Colors.YELLOW)
 
             self.particles.render()
-
             self.score.render()
 
             pygame.display.update()
@@ -91,3 +91,4 @@ class Game:
 if __name__ == '__main__':
     game = Game()
     game.loop()
+
