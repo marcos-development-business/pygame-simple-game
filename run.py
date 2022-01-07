@@ -4,11 +4,16 @@ import sys
 from pygame import gfxdraw
 
 from constants import Constants
+from objects.Score import Score
 from objects.ball import Ball
 from objects.ballsList import BallsList
 from objects.particles import Particles
 
 pygame.init()
+
+pygame.font.init()
+
+font = pygame.font.SysFont(pygame.font.get_default_font(), 20)
 
 
 class Game:
@@ -28,6 +33,7 @@ class Game:
     def loop(self):
         self.create_new_ball()
         particles = Particles(self.screen)
+        score = Score()
 
         while self.running:
             balls = self.balls.get_balls()
@@ -42,10 +48,12 @@ class Game:
                         if ball.check_if_click_is_inside(mouse_click_pos[0], mouse_click_pos[1]) and ball.y + ball.ray > Constants.BREAKPOINT:
                             self.balls.remove_ball(ball.id)
                             particles.create(ball.x, ball.y)
+                            score.increment()
 
             for ball in balls:
                 if ball.check_if_y_exceed_height():
                     self.balls.remove_ball(ball.id)
+                    score.lose(10)
                 else:
                     if ball.check_if_y_exceed_breakpoint():
                         self.create_new_ball()
@@ -58,6 +66,20 @@ class Game:
             gfxdraw.hline(self.screen, 0, int(Constants.GAME_WIDTH), int(Constants.BREAKPOINT), Constants.Colors.WHITE)
 
             particles.render()
+
+            score_text = font.render(f' SCORE: {score} ', True, Constants.Colors.WHITE, Constants.Colors.SMOOTH_BLACK)
+
+            text_width = score_text.get_width() + score_text.get_width() * 2
+            rect_center = int(Constants.GAME_WIDTH / 2 - text_width / 2)
+            text_center = (int(Constants.GAME_WIDTH / 2 - score_text.get_width() / 2), int(score_text.get_height() / 2) + 15 // 4)
+
+            pygame.draw.rect(
+                self.screen, Constants.Colors.SMOOTH_BLACK,
+                border_bottom_left_radius=20, border_bottom_right_radius=20,
+                rect=(rect_center, 0, score_text.get_width() + score_text.get_width() * 2, 30)
+            )
+
+            self.screen.blit(score_text, (text_center[0], text_center[1]))
 
             pygame.display.update()
 

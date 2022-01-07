@@ -20,7 +20,8 @@ class Constants:
         WHITE = (255, 255, 255)
         RED = (255, 0, 0)
         GREEN = (0, 255, 0)
-        YELLOW = (255, 0, 255)
+        YELLOW = (246, 255, 0)
         GRAY = (62, 62, 71)
+        SMOOTH_BLACK = (46, 46, 46)
 
-        LIST = RED, GREEN, WHITE, YELLOW
+        LIST = YELLOW, RED, GREEN, WHITE
