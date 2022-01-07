@@ -17,6 +17,7 @@ pygame.init()
 font = pygame.font.SysFont(pygame.font.get_default_font(), 20)
 
 
+
 class Game:
     def __init__(self):
         self.screen = pygame.display.set_mode(Constants.SIZE)
@@ -25,8 +26,12 @@ class Game:
         self.score = Score(self.screen)
         self.particles = Particles(self.screen)
 
-        start_game_sound = pygame.mixer.Sound('assets/sounds/start_game.wav')
-        start_game_sound.play(0)
+        self.background = pygame.image.load('assets/images/background.png').convert()
+        self.ten_more_point = pygame.mixer.Sound('assets/sounds/10_more_point.wav')
+        self.get_ball_sound = pygame.mixer.Sound('assets/sounds/get_ball.wav')
+        self.start_game_sound = pygame.mixer.Sound('assets/sounds/start_game.wav')
+
+        self.start_game_sound.play(0)
 
         self.create_new_ball()
 
@@ -52,11 +57,9 @@ class Game:
                     for ball in balls:
                         if ball.check_if_click_is_inside(mouse_click_pos[0], mouse_click_pos[1]) and mouse_click_pos[1] > Constants.BREAKPOINT:
                             if (self.score.get_score() + 1) % 10 == 0:
-                                ten_more_point = pygame.mixer.Sound('assets/sounds/10_more_point.wav')
-                                ten_more_point.play(0, 1500)
+                                self.ten_more_point.play(0, 1500)
                             else:
-                                get_ball_sound = pygame.mixer.Sound('assets/sounds/get_ball.wav')
-                                get_ball_sound.play(0, 2000)
+                                self.get_ball_sound.play(0, 2000)
                             self.balls.remove_ball(ball.id)
                             self.particles.create(ball.x, ball.y)
                             self.score.increment()
@@ -82,7 +85,7 @@ class Game:
 
             pygame.display.update()
 
-            self.screen.fill(Constants.Colors.BLACK)
+            self.screen.blit(self.background, (0, 0))
 
 
 if __name__ == '__main__':
