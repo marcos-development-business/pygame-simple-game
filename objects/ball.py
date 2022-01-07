@@ -1,6 +1,8 @@
+from os import path
 from uuid import uuid4
 from random import random, randint
 
+import pygame
 from pygame import gfxdraw, Surface
 
 from constants import Constants
@@ -17,7 +19,7 @@ class Ball:
         self.ray = randint(20, int(__w - (__w % 10)))
         self.id = str(uuid4())
         self.x = randint(int(self.ray * 2), int(Constants.GAME_WIDTH - (self.ray * 2)))
-        self.y = -(self.ray * 2)
+        self.y = -self.ray
 
     def render(self):
         gfxdraw.aacircle(self.screen, int(self.x), int(self.y), self.ray, self.color)
@@ -33,6 +35,8 @@ class Ball:
 
     def change_x_direction(self):
         if self.x + self.ray >= Constants.GAME_WIDTH or self.x - self.ray <= 0:
+            ball_change_direction_sound = pygame.mixer.Sound(path.join('assets/sounds/ball_change_direction.wav'))
+            ball_change_direction_sound.play(0)
             self.gravityX = -self.gravityX
 
     def handle_with_color_update(self, new_color: tuple[int, int, int]):

@@ -1,3 +1,5 @@
+import time
+
 import pygame
 import sys
 
@@ -46,6 +48,12 @@ class Game:
                     mouse_click_pos = pygame.mouse.get_pos()
                     for ball in balls:
                         if ball.check_if_click_is_inside(mouse_click_pos[0], mouse_click_pos[1]) and mouse_click_pos[1] > Constants.BREAKPOINT:
+                            if (score.get_score() + 1) % 10 == 0:
+                                ten_more_point = pygame.mixer.Sound('assets/sounds/10_more_point.wav')
+                                ten_more_point.play(0, 1500)
+                            else:
+                                get_ball_sound = pygame.mixer.Sound('assets/sounds/get_ball.wav')
+                                get_ball_sound.play(0, 2000)
                             self.balls.remove_ball(ball.id)
                             particles.create(ball.x, ball.y)
                             score.increment()
@@ -87,5 +95,8 @@ class Game:
 
 
 if __name__ == '__main__':
+    start_game_sound = pygame.mixer.Sound('assets/sounds/start_game.wav')
+    start_game_sound.play(0)
+    time.sleep(2)
     game = Game()
     game.loop()
