@@ -45,7 +45,7 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_click_pos = pygame.mouse.get_pos()
                     for ball in balls:
-                        if ball.check_if_click_is_inside(mouse_click_pos[0], mouse_click_pos[1]) and ball.y + ball.ray > Constants.BREAKPOINT:
+                        if ball.check_if_click_is_inside(mouse_click_pos[0], mouse_click_pos[1]) and mouse_click_pos[1] > Constants.BREAKPOINT:
                             self.balls.remove_ball(ball.id)
                             particles.create(ball.x, ball.y)
                             score.increment()
@@ -53,7 +53,7 @@ class Game:
             for ball in balls:
                 if ball.check_if_y_exceed_height():
                     self.balls.remove_ball(ball.id)
-                    score.lose(10)
+                    score.decrement()
                 else:
                     if ball.check_if_y_exceed_breakpoint():
                         self.create_new_ball()

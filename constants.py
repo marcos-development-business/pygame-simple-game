@@ -10,7 +10,7 @@ class Constants:
 
     GAME_WIDTH = min(__width * 0.9, 600)
     GAME_HEIGHT = __90_percent_screen_width - (__90_percent_screen_width % 10)
-    GAME_VELOCITY = 0.001
+    GAME_VELOCITY = 0.1
     SIZE = (GAME_WIDTH, GAME_HEIGHT)
     BREAKPOINT = GAME_HEIGHT // 2
     MAX_DISTANCE_TO_PARTICLES = 300

@@ -7,7 +7,8 @@ class Score:
         self.__score += to
 
     def decrement(self, by=1):
-        self.__score -= by
+        if self.__score > 0:
+            self.__score -= by
 
     def reset(self):
         self.__score = 0
@@ -17,6 +18,9 @@ class Score:
             self.decrement(total)
         else:
             self.reset()
+
+    def get_score(self):
+        return self.__score
 
     def __str__(self):
         return str(self.__score).rjust(3, '0')

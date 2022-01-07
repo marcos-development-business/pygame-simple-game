@@ -12,8 +12,8 @@ class Ball:
         self.color = color
         self.break_point_exceeded = False
         self.screen = screen
-        self.gravityY = max(random() / 2, 0.4)
-        self.gravityX = max(random() / 2, 0.4) if randint(0, 1) == 1 else -max(random() / 2, 0.4)
+        self.gravityY = max(random() / 3, 0.3)
+        self.gravityX = max(random() / 3, 0.3) if randint(0, 1) == 1 else -max(random() / 3, 0.3)
         self.ray = randint(20, int(__w - (__w % 10)))
         self.id = str(uuid4())
         self.x = randint(int(self.ray * 2), int(Constants.GAME_WIDTH - (self.ray * 2)))
@@ -24,7 +24,11 @@ class Ball:
         gfxdraw.filled_circle(self.screen, int(self.x), int(self.y), self.ray, self.color)
 
     def move(self):
-        self.x = (self.x + Constants.GAME_VELOCITY) + self.gravityX
+        if self.gravityX > 0:
+            self.x = (self.x + Constants.GAME_VELOCITY) + self.gravityX
+        else:
+            self.x = (self.x - Constants.GAME_VELOCITY) + self.gravityX
+
         self.y = (self.y + Constants.GAME_VELOCITY) + self.gravityY
 
     def change_x_direction(self):
@@ -32,13 +36,13 @@ class Ball:
             self.gravityX = -self.gravityX
 
     def handle_with_color_update(self, new_color: tuple[int, int, int]):
-        if self.y - self.ray > Constants.BREAKPOINT:
+        if self.y + self.ray > Constants.BREAKPOINT > self.y - self.ray:
+            self.color = Constants.Colors.YELLOW
+        elif self.y - self.ray > Constants.BREAKPOINT:
             self.color = new_color
 
     def check_if_y_exceed_breakpoint(self):
-        bottom_figure_y = self.y + self.ray
-        check = bottom_figure_y - (bottom_figure_y % 10) == Constants.BREAKPOINT - (
-                    Constants.BREAKPOINT % 10) and not self.break_point_exceeded
+        check = self.y + self.ray >= Constants.BREAKPOINT and not self.break_point_exceeded
 
         if check:
             self.break_point_exceeded = True
