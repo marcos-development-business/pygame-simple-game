@@ -14,8 +14,8 @@ class Ball:
         self.color = color
         self.break_point_exceeded = False
         self.screen = screen
-        self.gravityY = max(random() / 3, 0.3)
-        self.gravityX = max(random() / 3, 0.3) if randint(0, 1) == 1 else -max(random() / 3, 0.3)
+        self.gravityY = min(random() / 3, 0.3)
+        self.gravityX = min(random() / 3, 0.3) if randint(0, 1) == 1 else -max(random() / 3, 0.3)
         self.ray = randint(20, int(__w - (__w % 10)))
         self.id = str(uuid4())
         self.x = randint(int(self.ray * 2), int(Constants.GAME_WIDTH - (self.ray * 2)))
